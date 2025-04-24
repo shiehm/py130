@@ -4,7 +4,9 @@ PEDAC
 Problem: Find the longest sentence in a string, and the number of words in it. 
 
 Questions:
-- Is punctuation (like commas) considered a word?
+- Is punctuation (like commas) considered a word? According to the definition, 
+it seems like commas are not considered a separate word (just whatever is 
+separated by spaces)
 
 Data Structures: Can use list to store separate sentences, then use a dictionary
 to store the length if needed
@@ -13,18 +15,46 @@ to store the length if needed
 
 Algorithm:
 1. Identify the sentences and split them up into lists
-    a. Identify all sentence ending punctuation
-    b. Split the string based on a collection of punctuations
-2. Count the number of words in each sentence
-    a. Identify all strings separated by spaces as words 
-    b. Split these sentences up into sublists with all the words in a sentence 
-3. Iterate through the list of lists
-    a. Find the len of the sub-lists
-    b. Store the largest one as the "longest" along with its len word count 
+    a. Identify all sentence ending punctuation and store in constant ENDINGS
+    b. Split the string based on ENDINGS (end up with a list of string sentences)
+        i. Initialize empty list and holder variable and iterate through the string
+        ii. Add each char until you hit an ENDING
+        iii. Once you hit an ending, 
+            - add the ENDING to the holder 
+            - append the holder to the list
+            - reset the holder to ''
+    c. Split any whitespaces before or after the string off 
+2a. Iterate through the list of strings:
+    a. Initialize a set of tracker variables for "longest_string" and "longest_count"
+    b. Count how many words in the string by splitting by ' ' and using len()
+    c. Store the longest count and longest string so far in the tracker variables
+    d. Return the tracker variables
+Alternatively:
+2b. Sort the list of strings using len as a key to sort (key=len):
+    a. Return index [-1] (reverse=False is default setting)
 """
 
-def longest_sentence():
-    pass
+def find_sentences(string):
+    ENDINGS = ['.', '?', '!']
+    
+    sentences = []
+    current_sentence = ''
+    for char in string:
+        current_sentence += char
+        if char in ENDINGS:
+            sentences.append(current_sentence)
+            current_sentence = ''
+    
+    clean_sentences = [sentence.strip() for sentence in sentences]
+    return clean_sentences
+
+def longest_sentence(string):
+    sentences = [sentence.split() for sentence in find_sentences(string)]
+    sentences.sort(key=len)
+    longest_sentence = ' '.join(sentences[-1])
+    longest_count = len(sentences[-1])
+    print(longest_sentence)
+    print(f'The longest sentence has {longest_count} words.')
 
 long_text = (
     'Four score and seven years ago our fathers brought forth on this '
