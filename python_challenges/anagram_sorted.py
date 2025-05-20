@@ -44,26 +44,15 @@ Algorithm (for match):
 class Anagram:
     def __init__(self, word):
         self.word = word
-        self.word_lower = word.casefold()
     
     def single_match(self, word):
-        word_lower = word.casefold()
-        if len(word) != len(self.word) or word_lower == self.word_lower:
+        if word.casefold() == self.word.casefold():
             return False
-        
-        tracker = list(word_lower)
-        for char in self.word:
-            if char.casefold() in tracker:
-                tracker.remove(char.casefold())
-        return not tracker
+        return sorted(word.casefold()) == sorted(self.word.casefold())
     
     def match(self, lst):
-        anagrams = []
-        for item in lst:
-            if self.single_match(item):
-                anagrams.append(item)
-        return anagrams
-
+        return [item for item in lst if self.single_match(item)]
+        
 anagram = Anagram('hello')
 print(anagram.match(['hel', 'ji', 'llo', 'elloh', 'lohel']))
 
