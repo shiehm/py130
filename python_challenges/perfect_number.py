@@ -26,16 +26,16 @@ Algorithm:
 
 class PerfectNumber:
     def __init__(self, number: int):
-        self.validate(number)
-        
-        self.number = number
+        self.number = PerfectNumber.validate(number)
         self.divisors = PerfectNumber.find_divisors(number)
         self.aliquot = PerfectNumber.aliquot_sum(number)
         self.category = PerfectNumber.classify(number)
     
-    def validate(self, number):
+    @classmethod
+    def validate(cls, number):
         if number < 0:
             raise ValueError('Input must be a positive integer')
+        return number
     
     @classmethod
     def find_divisors(cls, number):
@@ -52,16 +52,17 @@ class PerfectNumber:
     
     @classmethod
     def classify(cls, number):
-        aliquot_sum = cls.aliquot_sum(number)
+        valid_num = cls.validate(number)
+        aliquot_sum = cls.aliquot_sum(valid_num)
         if aliquot_sum == number:
-            return 'Perfect'
+            return 'perfect'
         elif aliquot_sum > number:
-            return 'Abundant'
+            return 'abundant'
         else:
-            return 'Deficient'
+            return 'deficient'
     
 
 print(PerfectNumber.classify(13))
 print(PerfectNumber.classify(28))
 print(PerfectNumber.classify(12))
-print(PerfectNumber.classify(-1))
+# print(PerfectNumber.classify(-1))
