@@ -22,36 +22,42 @@ Algorithm:
     - Could do this iteratively but that would take a long time if the number is huge 
     - Then sum the divisors 
 - classify -> categorize the result
+
+Notes:
+- If a class only has classmethods and staticmethods, you don't need init 
 """
 
-class PerfectNumber:
-    def __init__(self, number: int):
-        self.number = PerfectNumber.validate(number)
-        self.divisors = PerfectNumber.find_divisors(number)
-        self.aliquot = PerfectNumber.aliquot_sum(number)
-        self.category = PerfectNumber.classify(number)
-    
+# class PerfectNumber:
+    # def __init__(self, number: int):
+    #     self.number = PerfectNumber.validate(number)
+    #     self.divisors = PerfectNumber.find_divisors(number)
+    #     self.aliquot = PerfectNumber.aliquot_sum(number)
+    #     self.category = PerfectNumber.classify(number)
+
+class PerfectNumber:  
     @classmethod
-    def validate(cls, number):
+    def validate(cls, number: int):
         if number < 0:
             raise ValueError('Input must be a positive integer')
         return number
     
     @classmethod
-    def find_divisors(cls, number):
-        divisors = [1]
-        for i in range(2, number):
+    def find_divisors(cls, number: int):
+        divisors = {1}
+        square_root = number**(1/2)
+        for i in range(2, int(square_root) + 1):
             if number % i == 0:
-                divisors.append(i)
-        return divisors
+                divisors.add(i)
+                divisors.add(number // i)
+        return sorted(divisors)
     
     @classmethod
-    def aliquot_sum(cls, number):
+    def aliquot_sum(cls, number: int):
         divisors = cls.find_divisors(number)
         return sum(divisors)
     
     @classmethod
-    def classify(cls, number):
+    def classify(cls, number: int):
         valid_num = cls.validate(number)
         aliquot_sum = cls.aliquot_sum(valid_num)
         if aliquot_sum == number:
